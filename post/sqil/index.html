@@ -1,94 +1,100 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>SQIL | Jiao&#39;s blog</title>
-<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592834838106">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592835147606">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="SQIL | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 
     <meta name="description" content="模仿学习在面对高维，连续和未知动态环境往往会出现分布偏移（distribution shift），因为agent会贪婪的模仿示范动作，误差积累会造成偏移。RL中inverse RL和GAIL通过在long horizon上匹配来克服这个问题..." />
     <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://Hotwaterman.github.io">
-  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1592834838106" alt="">
-  </a>
-  <h1 class="site-title">
-    Jiao&#39;s blog
-  </h1>
-  <p class="site-description">
-    
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Hotwaterman.github.io">
+        <img src="https://Hotwaterman.github.io/images/avatar.png?v=1592835147606" class="site-logo">
+        <h1 class="site-title">Jiao&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="/" class="menu">
-          首页
-        </a>
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="/archives" class="menu">
-          归档
-        </a>
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
       
-    
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
       
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
+      
+    </div>
+    <div class="site-description">
+      
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              SQIL
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-22
-              </span>
-              <span>
-                8 min read
-              </span>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">SQIL</h2>
+            <div class="post-date">2020-06-22</div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p>模仿学习在面对高维，连续和未知动态环境往往会出现分布偏移（distribution shift），因为agent会贪婪的模仿示范动作，误差积累会造成偏移。RL中inverse RL和GAIL通过在long horizon上匹配来克服这个问题。因为奖励函数未知，所以要通过示范动作使用对抗训练中复杂而脆弱的技术来学习奖励函数。这篇paper提出一种简单的替代方法，不需要奖励函数。关键在于鼓励agent在面对新的分布之外的状态时返回示范状态来使agent在长期水平上匹配demonstration。通过在示范状态中做出相应的示范动作来给agent一个恒定的奖励+1，其他状态为0。soft Q imitation learning可以通过对标准Q learning或者off policy actor-critic 少量修改来实现。</p>
+            <div class="post-content" v-pre>
+              <p>模仿学习在面对高维，连续和未知动态环境往往会出现分布偏移（distribution shift），因为agent会贪婪的模仿示范动作，误差积累会造成偏移。RL中inverse RL和GAIL通过在long horizon上匹配来克服这个问题。因为奖励函数未知，所以要通过示范动作使用对抗训练中复杂而脆弱的技术来学习奖励函数。这篇paper提出一种简单的替代方法，不需要奖励函数。关键在于鼓励agent在面对新的分布之外的状态时返回示范状态来使agent在长期水平上匹配demonstration。通过在示范状态中做出相应的示范动作来给agent一个恒定的奖励+1，其他状态为0。soft Q imitation learning可以通过对标准Q learning或者off policy actor-critic 少量修改来实现。</p>
 <p>IRL通过训练agent不仅模仿示范动作而且经历示范状态来克服分布偏移问题。GAIL的核心思想是使用生成对抗网络来实现IRL，因为真正的奖励函数未知，所以这些方法通过对抗训练从demonstration得到奖励信号，这使它们很难实现并应用于实践中。</p>
 <p>这篇paper的核心思想是可以通过一个更简单的方式来实现对抗模仿的有效性而不需要对抗训练或者奖励函数。对抗方法通过向agent提供以下动机来鼓励进行长期模仿：（1）激励模仿已知（示范）状态下的已知动作（2）激励agent在偏离分布状态后返回示范状态。对抗方法胜过贪婪方法的原因之一有，贪婪只做1。通过给定固定奖励来取代对抗训练。</p>
 <p>理论上去解释，它实现了BC的正则化变体，通过（a）模仿策略隐含的奖励函数施加稀疏先验（b）纳入状态转变动态信息到模仿策略中来进行长期的学习。通过使用极度稀疏的奖励函数示范为-+1，其他为0来训练agent实现（a），RL训练agent来实现（b）。</p>
@@ -139,103 +145,45 @@
 <figure data-type="image" tabindex="12"><img src="https://Hotwaterman.github.io/post-images/1592834821888.png" alt="" loading="lazy"></figure>
 <p>λ测试SQIL是否需要与环境进行交互而不仅依赖于演示，γ为0 是为了防止SQIL访问与状态转换有关的信息，策略则体现agent训练期间遇到的状态有多重要。SQIL优于RBC，表明对初始状态的soft value的惩罚会降低表现。</p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#soft-q-imitation-learning">Soft Q Imitation Learning</a></li>
-<li><a href="#interpreting-sqil-as-regularized-behavioral-cloning">Interpreting SQIL as Regularized Behavioral Cloning</a><br>
-*
-<ul>
-<li><a href="#bc%E6%AD%A3%E5%88%99%E5%8C%96">BC正则化</a></li>
-<li><a href="#sqil%E5%92%8Crbc%E7%9A%84%E8%81%94%E7%B3%BB">SQIL和RBC的联系</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%9E%E9%AA%8C%E4%BC%B0%E8%AE%A1">实验估计</a><br>
-*
-<ul>
-<li><a href="#testing-generalization-in-image-based-car-racing">Testing Generalization in Image-Based Car Racing</a></li>
-<li><a href="#image-based-experiments-on-atari">image-based experiments on Atari</a></li>
-<li><a href="#instantiating-sqil-for-continuous-control-in-low-dimensional-mujoco">instantiating SQIL for continuous control in low-dimensional MuJoCo</a></li>
-<li><a href="#ablation-study-on-low-dimensional-lunar-lander">Ablation Study on Low-Dimensional Lunar Lander</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
             </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Hotwaterman.github.io/post/agent-57/">
+                  <h3 class="post-title">
+                    Agent 57
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://Hotwaterman.github.io/post/agent-57/">
-              <h3 class="post-title">
-                Agent 57
-              </h3>
-            </a>
+            
+
           </div>
-        
 
-        
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
+        </div>
       </div>
     </div>
 
-    <script>
-      hljs.initHighlightingOnLoad()
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+AOS.init();
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
+</script>
 
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
 
-    </script>
+
+
+
+
   </body>
 </html>
