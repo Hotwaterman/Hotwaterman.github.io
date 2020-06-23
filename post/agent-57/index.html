@@ -1,101 +1,95 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Agent 57 | Jiao&#39;s blog</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592894302473">
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592895304869">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-
-
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="alternate" type="application/atom+xml" title="Agent 57 | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
     <meta name="description" content="论文摘要：
 探索策略在DRL中往往会从以下三个方面：随机化价值函数，无监督策略学习，内在动机。尽管有一些成果，但现在还没有降低那些不依赖于人类示范的游戏的性能的算法，来提高算法表现。值得注意的是，利用内在动机的，例如NGU，在探索方面有不俗..." />
     <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://Hotwaterman.github.io">
-        <img src="https://Hotwaterman.github.io/images/avatar.png?v=1592894302473" class="site-logo">
-        <h1 class="site-title">Jiao&#39;s blog</h1>
-      </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
-      </div>
-    </div>
-    <div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1592895304869" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
       
-        
-          <a href="/" class="site-nav">
-            首页
-          </a>
-        
+        <a href="/" class="menu">
+          首页
+        </a>
       
-        
-          <a href="/archives" class="site-nav">
-            归档
-          </a>
-        
+    
       
-        
-          <a href="/tags" class="site-nav">
-            标签
-          </a>
-        
+        <a href="/archives" class="menu">
+          归档
+        </a>
       
-        
-          <a href="/post/about" class="site-nav">
-            关于
-          </a>
-        
+    
       
-    </div>
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
   </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
+  <div class="social-container">
+    
       
-        
+    
       
-        
+    
       
-        
+    
       
-        
+    
       
-        
-      
-    </div>
-    <div class="site-description">
-      
-    </div>
-    <div class="site-footer">
-      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">RSS</a>
-    </div>
+    
   </div>
 </div>
 
-
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">Agent 57</h2>
-            <div class="post-date">2020-06-10</div>
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Agent 57
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
             
-            <div class="post-content" v-pre>
-              <h3 id="论文摘要">论文摘要：</h3>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h3 id="论文摘要">论文摘要：</h3>
 <p>探索策略在DRL中往往会从以下三个方面：随机化价值函数，无监督策略学习，内在动机。尽管有一些成果，但现在还没有降低那些不依赖于人类示范的游戏的性能的算法，来提高算法表现。值得注意的是，利用内在动机的，例如NGU，在探索方面有不俗的表现。</p>
 <p>NGU是通过内在动机来生成奖励：其对一个episode内短期新信号和跨episode的长期新信号敏感。它学习了一个用于探索和利用的策略族（通过参数共享），目标为最终取得最高分数。NGU的一个缺陷是，无论其对学习过程的贡献，根据每个策略收集的经验数据数量是一样的。所以通过让NGU在整个生命周期中不断地调整其探索策略，从而能够适应特定的游戏。这让NGU变成一个更general的智能体。</p>
 <p>关于长期信用（奖励）分配可以分为两类：确保梯度正确分配，利用价值或目标正确分配。往往将两者混合可以取得更好的效果，即利用价值和奖励形成损失，利用模型的梯度来指导学习。</p>
@@ -126,45 +120,94 @@
 <h4 id="2-adaptive-exploration-over-a-family-of-policies">2. Adaptive Exploration over a Family of Policies</h4>
 <p>NGU的核心思想是关联训练一个使用一个网络结构的不同等级的探索行为策略族。通过这种方式，训练这些探索性策略起着一系列辅助任务的作用，即使在没有外部奖励的情况下，这些辅助任务也可以帮助训练共享体系结构。 这种方法的主要局限性在于，无论其对学习进度的贡献如何，所有策略均受到同等训练。 我们建议合并一个元控制器，该元控制器可以自适应地选择在训练和评估时使用哪些策略。这带来了两个重要的后果。 首先，通过选择在训练期间优先考虑的策略，我们可以分配更多的网络容量，以更好地表示与手头任务最相关的策略的Q。策略由成对的勘探率和折扣因子（βj;γj）表示，它们确定了折扣的累积奖励以最大化。 可以自然而然地期望βj较高和γj较低的政策在训练初期取得更大的进步，而随着训练的进展，情况会相反。 其次，该机制还提供了一种自然的方式，可以选择族中最佳的政策以在评估时使用。 考虑βj≈0的γj值的宽范围，提供了一种基于每个任务自动调整折扣因子的方法。这显着增加了该方法的通用性。</p>
 
-            </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://Hotwaterman.github.io/post/chu-xue-yuan-qiang-hua-xue-xi-meta-reinforcement-learning/">
-                  <h3 class="post-title">
-                    初学元强化学习（meta reinforcement learning)
-                  </h3>
-                </a>
               </div>
-            
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E8%AE%BA%E6%96%87%E6%91%98%E8%A6%81">论文摘要：</a></li>
+<li><a href="#never-give-up-ngu-%E8%83%8C%E6%99%AF">Never Give Up (NGU) 背景：</a></li>
+<li><a href="#ngu%E7%9A%84%E6%94%B9%E8%BF%9B">NGU的改进</a>
+<ul>
+<li><a href="#1-state-action-value-function%E7%9A%84%E5%8F%82%E6%95%B0%E5%8C%96">1. state-action value function的参数化</a></li>
+<li><a href="#2-adaptive-exploration-over-a-family-of-policies">2. Adaptive Exploration over a Family of Policies</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-            
-
-          </div>
-
+              </div>
+            </div>
+          </article>
         </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/chu-xue-yuan-qiang-hua-xue-xi-meta-reinforcement-learning/">
+              <h3 class="post-title">
+                初学元强化学习（meta reinforcement learning)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
       </div>
     </div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script type="application/javascript">
+    <script>
+      hljs.initHighlightingOnLoad()
 
-AOS.init();
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-</script>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
-
-
-
-
+    </script>
   </body>
 </html>

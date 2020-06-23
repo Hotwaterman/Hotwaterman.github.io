@@ -1,100 +1,94 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>one-shot high-fidelity imitation | Jiao&#39;s blog</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592894302473">
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1592895304869">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-
-
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="alternate" type="application/atom+xml" title="one-shot high-fidelity imitation | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
     <meta name="description" content="人类是高保真模仿的专家，只需要一次尝试就能模仿一个示范动作。这篇paper引入了off-policy RL算法 MetaMimic，meta mimic可以学习1）不同新技能的高保真one-shot模仿的策略，2）使agent比演示者更有效..." />
     <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://Hotwaterman.github.io">
-        <img src="https://Hotwaterman.github.io/images/avatar.png?v=1592894302473" class="site-logo">
-        <h1 class="site-title">Jiao&#39;s blog</h1>
-      </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
-      </div>
-    </div>
-    <div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1592895304869" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
       
-        
-          <a href="/" class="site-nav">
-            首页
-          </a>
-        
+        <a href="/" class="menu">
+          首页
+        </a>
       
-        
-          <a href="/archives" class="site-nav">
-            归档
-          </a>
-        
+    
       
-        
-          <a href="/tags" class="site-nav">
-            标签
-          </a>
-        
+        <a href="/archives" class="menu">
+          归档
+        </a>
       
-        
-          <a href="/post/about" class="site-nav">
-            关于
-          </a>
-        
+    
       
-    </div>
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
   </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
+  <div class="social-container">
+    
       
-        
+    
       
-        
+    
       
-        
+    
       
-        
+    
       
-        
-      
-    </div>
-    <div class="site-description">
-      
-    </div>
-    <div class="site-footer">
-      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">RSS</a>
-    </div>
+    
   </div>
 </div>
 
-
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">one-shot high-fidelity imitation</h2>
-            <div class="post-date">2020-06-23</div>
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              one-shot high-fidelity imitation
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-23
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
             
-            <div class="post-content" v-pre>
-              <p>人类是高保真模仿的专家，只需要一次尝试就能模仿一个示范动作。这篇paper引入了off-policy RL算法 MetaMimic，meta mimic可以学习1）不同新技能的高保真one-shot模仿的策略，2）使agent比演示者更有效地解决任务的策略。metamimic将所有的经历保存在一个内存中，然后重播这些体验，通过off-policy RL去学习一个深度学习网络。</p>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>人类是高保真模仿的专家，只需要一次尝试就能模仿一个示范动作。这篇paper引入了off-policy RL算法 MetaMimic，meta mimic可以学习1）不同新技能的高保真one-shot模仿的策略，2）使agent比演示者更有效地解决任务的策略。metamimic将所有的经历保存在一个内存中，然后重播这些体验，通过off-policy RL去学习一个深度学习网络。</p>
 <figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1592835409475.png" alt="" loading="lazy"></figure>
 <h3 id="metamimic">metamimic</h3>
 <p>meta mimic的component1将演示数据集作为输入，生成1）一组丰富经验2）one-shot high-fidelity imitation policy。组件2将丰富的经验作为输入，生成无条件任务策略。</p>
@@ -117,45 +111,93 @@
 <figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1592835481557.png" alt="" loading="lazy"></figure>
 <figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1592835493759.png" alt="" loading="lazy"></figure>
 
-            </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://Hotwaterman.github.io/post/sqil/">
-                  <h3 class="post-title">
-                    SQIL
-                  </h3>
-                </a>
               </div>
-            
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#metamimic">metamimic</a><br>
+*
+<ul>
+<li><a href="#%E5%AD%A6%E4%B9%A0one-shot-high-fidelity-imitation%E7%9A%84%E7%AD%96%E7%95%A5">学习one-shot high-fidelity imitation的策略</a></li>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E9%9D%9E%E6%9D%A1%E4%BB%B6%E4%BB%BB%E5%8A%A1%E7%AD%96%E7%95%A5">学习一个非条件任务策略</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-            
-
-          </div>
-
+              </div>
+            </div>
+          </article>
         </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/sqil/">
+              <h3 class="post-title">
+                SQIL
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
       </div>
     </div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script type="application/javascript">
+    <script>
+      hljs.initHighlightingOnLoad()
 
-AOS.init();
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-</script>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
-
-
-
-
+    </script>
   </body>
 </html>

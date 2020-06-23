@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Hotwaterman.github.io</id>
     <title>Jiao&apos;s blog</title>
-    <updated>2020-06-23T06:38:28.982Z</updated>
+    <updated>2020-06-23T06:55:08.907Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Hotwaterman.github.io"/>
     <link rel="self" href="https://Hotwaterman.github.io/atom.xml"/>
@@ -14,7 +14,7 @@
         <id>https://Hotwaterman.github.io/post/one-shot-high-fidelity-imitation/</id>
         <link href="https://Hotwaterman.github.io/post/one-shot-high-fidelity-imitation/">
         </link>
-        <updated>2020-06-22T16:15:24.000Z</updated>
+        <updated>2020-06-22T17:15:24.000Z</updated>
         <content type="html"><![CDATA[<p>人类是高保真模仿的专家，只需要一次尝试就能模仿一个示范动作。这篇paper引入了off-policy RL算法 MetaMimic，meta mimic可以学习1）不同新技能的高保真one-shot模仿的策略，2）使agent比演示者更有效地解决任务的策略。metamimic将所有的经历保存在一个内存中，然后重播这些体验，通过off-policy RL去学习一个深度学习网络。</p>
 <figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1592835409475.png" alt="" loading="lazy"></figure>
 <h3 id="metamimic">metamimic</h3>
