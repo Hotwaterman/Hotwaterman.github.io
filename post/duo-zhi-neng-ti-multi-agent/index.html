@@ -1,0 +1,273 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>多智能体 Multi-agent | Jiao&#39;s blog</title>
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1593753580326">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="多智能体 Multi-agent | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Game Theory 博弈论
+博弈论是对多人且彼此相互影响的情形建模。
+learning over multiple agents
+每个agent的学习都会对环境和其他agent造成影响，这种同时学习意味着每个学习规则都能导致一个动态系统..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1593753580326" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              多智能体 Multi-agent
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-07-03
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="game-theory-博弈论">Game Theory 博弈论</h2>
+<p>博弈论是对多人且彼此相互影响的情形建模。</p>
+<h4 id="learning-over-multiple-agents">learning over multiple agents</h4>
+<p>每个agent的学习都会对环境和其他agent造成影响，这种同时学习意味着每个学习规则都能导致一个动态系统，且简单的rules可以导致一个系统的的复杂动作。当进行动作选择时，player不仅要考虑到他从其他player的过去行为中学习到的，还要考虑到他的动作对其他player未来动作的影响。</p>
+<p>重复游戏被视为“学习”的特性设置：时间特质和跨时间规律性（每次涉及同一名玩家和相同的游戏）。这允许我们考虑策略，未来动作取决于过去经验。</p>
+<h4 id="fictitious-play">Fictitious Play</h4>
+<p>虚拟play是一个简单的序列进程来学习游戏的价值。一个model-based learning的例子：</p>
+<pre><code>初始化对手策略的beliefs
+repeat：
+根据对手策略来选择一个最佳对策
+观测对手实际动作，更新belief
+</code></pre>
+<p>在fictitious play中，agent相信对手与先前动作的经验分布相关的混合策略。混合策略为：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo>(</mo><mi>a</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>w</mi><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mrow><munder><mo>∑</mo><mrow><msup><mi>a</mi><mo separator="true">,</mo></msup><mo>∈</mo><mi>A</mi></mrow></munder><mi>w</mi><mo>(</mo><msup><mi>a</mi><mo separator="true">,</mo></msup><mo>)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(a)=\frac{w(a)}{\sum_{a^,\in A}w(a^,)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.44008em;vertical-align:-1.01308em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.17862099999999992em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.3614em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mpunct mtight">,</span></span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mathdefault mtight">A</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.32708000000000004em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.362892em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mpunct mtight">,</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.01308em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>fictitious play对players的初始beliefs很敏感。</p>
+<h4 id="smoothed-fictitious-play">Smoothed Fictitious Play</h4>
+<p>agent i 适应一个混合策略<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 来最大化：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover><mo><msub><mi>σ</mi><mi>i</mi></msub></mo><mrow><mi>a</mi><mi>r</mi><mi>g</mi><mi>m</mi><mi>a</mi><mi>x</mi></mrow></mover><munder><mo>∑</mo><msub><mi>s</mi><mi>i</mi></msub></munder><msub><mi>σ</mi><mi>i</mi></msub><mo>(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>)</mo><msub><mi>u</mi><mi>i</mi></msub><mo>(</mo><msub><mi>s</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>P</mi><mi>t</mi></msub><mo>)</mo><mo>−</mo><mi>β</mi><msub><mi>v</mi><mi>i</mi></msub><mo>(</mo><msub><mi>σ</mi><mi>i</mi></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">\stackrel{argmax}{\sigma_i}\sum_{s_i}\sigma_i (s_i)u_i(s_i,P_t)-\beta v_i(\sigma_i)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2290599999999998em;vertical-align:-0.15em;"></span><span class="mrel"><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.07906em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.677668em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.40011em;vertical-align:-1.350105em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.8999949999999999em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.350105em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span> 是一个常量，$v_i(\sigma_i)=\sum_{s_i}log \sigma_i (s_i) $</p>
+<h4 id="rational-learning">Rational learning</h4>
+<p>也叫贝叶斯学习，不像fictitious play，它允许player拥有一个更大的策略集。</p>
+<p>和fictitious play相似，每个玩家带着先验知识开始游戏，<img src="https://Hotwaterman.github.io/post-images/1593753423082.png" alt="" loading="lazy"></p>
+<h4 id="evolutionary-game-theory">Evolutionary Game theory</h4>
+<p>博弈论继续使用即使个体可能不会做出正确合理的决定，所以抉择可能是无意识的。</p>
+<p>许多动作涉及到种群中生物间的相互影响，所以评估其适应度，应从整体种群角度出发。</p>
+<p><img src="https://Hotwaterman.github.io/post-images/1593753440876.png" alt="" loading="lazy"><br>
+<img src="https://Hotwaterman.github.io/post-images/1593753447406.png" alt="" loading="lazy"></p>
+<h2 id="multi-agent-reinforcement-learning">Multi-agent Reinforcement Learning</h2>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1593753455996.png" alt="" loading="lazy"></figure>
+<p>MAL困难在智能体不仅与环境交互，而且每个智能体之间也存在相互影响。若是通过把其他智能体当作环境的一部分来考虑使用单智能体的Q learning，这将破坏收束保证，导致学习的不稳定。</p>
+<h4 id="序列决策过程">序列决策过程：</h4>
+<h5 id="马尔可夫决策过程一个决策者多种状态">马尔可夫决策过程：一个决策者，多种状态</h5>
+<h5 id="重复游戏多个决策者一种状态">重复游戏：多个决策者，一种状态</h5>
+<h5 id="随机游戏马尔科夫游戏多个决策者多种状态">随机游戏（马尔科夫游戏）：多个决策者，多种状态</h5>
+<p>重复游戏又叫matrix game，因为奖励函数和状态可以用一个n维数组来表示。</p>
+<p>随机游戏：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>n</mi><mo separator="true">,</mo><mi>S</mi><mo separator="true">,</mo><msub><mi>A</mi><mrow><mn>1...</mn><mi>n</mi></mrow></msub><mo separator="true">,</mo><mi>T</mi><mo separator="true">,</mo><msub><mi>R</mi><mrow><mn>1...</mn><mi>n</mi></mrow></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">(n,S,A_{1...n},T,R_{1...n})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 其中n为player的数量，S是状态集合，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">A_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是对于player i的可用动作集，T是转移函数，R是奖励函数。</p>
+<p>与MDP不同，有很多玩家进行动作选择，下一状态和奖励由联合动作决定并且每个玩家有其自己的奖励函数。</p>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1593753467165.png" alt="" loading="lazy"></figure>
+<p>如果固定除了一个agent之外其他agent的策略，那么问题将变成MDP。</p>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1593753474925.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1593753481487.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1593753488616.png" alt="" loading="lazy"></figure>
+<p><img src="https://Hotwaterman.github.io/post-images/1593753494483.png" alt="" loading="lazy"><br>
+policy iterations：</p>
+<ol>
+<li>初始化V</li>
+<li>重复：<img src="https://Hotwaterman.github.io/post-images/1593753505378.png" alt="" loading="lazy"></li>
+</ol>
+<p>每个player根据当前的价值函数选择均衡策略</p>
+<p>价值函数根据这些策略得到的实际奖励进行更新。</p>
+<p>在动态游戏中，行为策略是一种混合策略，他在历史纪录上相互独立。马尔科夫策略是一种行为策略，在时间t上，仅取决于当前状态。稳态策略是一种马尔科夫策略，仅取决于当前状态，与时间无关。</p>
+<p>对于player i 一个best-response policy是<img src="https://Hotwaterman.github.io/post-images/1593753517233.png" alt="" loading="lazy"></p>
+<p>纳什均衡学习者，每一个策略都是best-response policy。</p>
+<p>Equilibrium Learners</p>
+<p>均衡学习者旨在寻找能达到纳什均衡的策略，寻找纳什均衡的优点有agent学习了一个性能下限，在这种情况下，他变得独立于其他agent的策略。</p>
+<p>在SG中：</p>
+<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1593753527734.png" alt="" loading="lazy"></figure>
+<p>Nash Q:</p>
+<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1593753540450.png" alt="" loading="lazy"></figure>
+<p>Minimax-Q:（被设计用于处理零和随机游戏）</p>
+<p>在零和博弈中只有一种均衡，可以通过线性处理得到。</p>
+<p><img src="https://Hotwaterman.github.io/post-images/1593753548067.png" alt="" loading="lazy"><br>
+其中a是自己的动作，o是对手的动作。</p>
+<p>Friend-or-Foe-Q:</p>
+<p>扩展minimax-Q去解决更一般的随机游戏。在每个状态，先决定agent是扮演一个朋友（纳什将是协调平衡和全局最优）还是敌人（游戏有一个在鞍点的对抗均衡）。</p>
+<figure data-type="image" tabindex="8"><img src="https://Hotwaterman.github.io/post-images/1593753555172.png" alt="" loading="lazy"></figure>
+<p>Desired properties of multi-agent learners</p>
+<p>rationality:如果其他智能体的策略收敛于一个稳态策略，那么学习算法将收敛于一个对其他智能体的best-response</p>
+<p>convergence：学习者收敛于一个稳态策略。</p>
+<p>Joint Action Learners (JALs)</p>
+<p>Q值基于联合动作而不是各自的动作（即对于状态和其他智能体动作的整体观测）。但是因为智能体们不是协调的，所以不能保证其他智能体处于相同的学习阶段。Q值可以在观测动作的偏差上进行更新。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mi>V</mi><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo><mo>=</mo><munder><mo>∑</mo><mrow><msub><mi>a</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub><mo>∈</mo><msub><mi>A</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub></mrow></munder><mi>Q</mi><mo>(</mo><mo>&lt;</mo><msub><mi>a</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>a</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub><mo>)</mo><munder><mo>∏</mo><mrow><mi>j</mi><mi mathvariant="normal">≠</mi><mi>i</mi></mrow></munder><mover accent="true"><msub><mi>π</mi><mi>j</mi></msub><mo stretchy="true">^</mo></mover><mo>(</mo><msub><mi>a</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub><mo>[</mo><mi>j</mi><mo>]</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">EV(a_i)=\sum_{a_{-i}\in A_{-i}}Q(&lt;a_i,a_{-i})\prod_{j\neq i}\widehat{\pi_j}(a_{-i}[j])
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.4861060000000004em;vertical-align:-1.436101em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.8556639999999998em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32808571428571426em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.20252142857142857em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32808571428571426em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.20252142857142857em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.436101em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">Q</span><span class="mopen">(</span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.488226em;vertical-align:-1.438221em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.8478869999999998em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight"><span class="mrel mtight"><span class="mord mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="rlap mtight"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="inner"><span class="mrel mtight"></span></span><span class="fix"></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span></span><span class="mrel mtight">=</span></span><span class="mord mathdefault mtight">i</span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∏</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.438221em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.67056em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span style="height:0.24em;"><svg width='100%' height='0.24em' viewBox='0 0 1062 239' preserveAspectRatio='none'><path d='M529 0h5l519 115c5 1 9 5 9 10 0 1-1 2-1 3l-4 22
+c-1 5-5 9-11 9h-2L532 67 19 159h-2c-5 0-9-4-11-9l-5-22c-1-6 2-12 8-13z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mclose">)</span></span></span></span></span></p>
+<p>Opponent Modeling/Fictitious Play</p>
+<figure data-type="image" tabindex="9"><img src="https://Hotwaterman.github.io/post-images/1593753564178.png" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#game-theory-%E5%8D%9A%E5%BC%88%E8%AE%BA">Game Theory 博弈论</a><br>
+*
+<ul>
+<li><a href="#learning-over-multiple-agents">learning over multiple agents</a></li>
+<li><a href="#fictitious-play">Fictitious Play</a></li>
+<li><a href="#smoothed-fictitious-play">Smoothed Fictitious Play</a></li>
+<li><a href="#rational-learning">Rational learning</a></li>
+<li><a href="#evolutionary-game-theory">Evolutionary Game theory</a></li>
+</ul>
+</li>
+<li><a href="#multi-agent-reinforcement-learning">Multi-agent Reinforcement Learning</a><br>
+*
+<ul>
+<li><a href="#%E5%BA%8F%E5%88%97%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B">序列决策过程：</a>
+<ul>
+<li><a href="#%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%E4%B8%80%E4%B8%AA%E5%86%B3%E7%AD%96%E8%80%85%E5%A4%9A%E7%A7%8D%E7%8A%B6%E6%80%81">马尔可夫决策过程：一个决策者，多种状态</a></li>
+<li><a href="#%E9%87%8D%E5%A4%8D%E6%B8%B8%E6%88%8F%E5%A4%9A%E4%B8%AA%E5%86%B3%E7%AD%96%E8%80%85%E4%B8%80%E7%A7%8D%E7%8A%B6%E6%80%81">重复游戏：多个决策者，一种状态</a></li>
+<li><a href="#%E9%9A%8F%E6%9C%BA%E6%B8%B8%E6%88%8F%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E6%B8%B8%E6%88%8F%E5%A4%9A%E4%B8%AA%E5%86%B3%E7%AD%96%E8%80%85%E5%A4%9A%E7%A7%8D%E7%8A%B6%E6%80%81">随机游戏（马尔科夫游戏）：多个决策者，多种状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/evolution-strategies-as-a-scalable-alternative-to-reinforcement-learning/">
+              <h3 class="post-title">
+                Evolution Strategies as a Scalable Alternative to Reinforcement Learning
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
