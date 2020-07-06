@@ -1,0 +1,229 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hindsight Experience Replay | Jiao&#39;s blog</title>
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1594046876329">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Hindsight Experience Replay | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="hindsight experience replay 主要解决的是稀疏且是二元的奖励问题。
+A motivating example
+考虑一个bit-flipping的环境，即状态空间为S={0,1}nS=\{0,1\}^nS={0,1}..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1594046876329" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Hindsight Experience Replay
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-07-07
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>hindsight experience replay 主要解决的是稀疏且是二元的奖励问题。</p>
+<h4 id="a-motivating-example">A motivating example</h4>
+<p>考虑一个bit-flipping的环境，即状态空间为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo>=</mo><mo>{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><msup><mo>}</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">S=\{0,1\}^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span> ，动作空间为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo><mo>{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>}</mo></mrow><annotation encoding="application/x-tex">A=\{0,1,...,n-1\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">}</span></span></span></span> ，每个episode均匀采样一个初始状态和目标状态，除目标外其余奖励为-1。观察到当n&gt;40时，一般的RL很容易失败，因为不曾经历除-1之外的奖励。但一些提高探索的方法并不能有效改善这个问题，因为在巨大的状态空间中进行探索是不现实的。一个标准解法是使用其他的奖励函数，但是在更复杂的环境中也十分困难。</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1594046755493.png" alt="" loading="lazy"></figure>
+<h4 id="multi-goal-rl">multi-goal RL</h4>
+<p>假定一个映射，一个s到g的映射，其中某些s可以得到为1的奖励。从分布中采样目标和初始目标，并在一定数量的时间布上运行agent，非g的状态奖励为1，但是这种方法在实践中表现的并不好，因为奖励稀疏且信息较少。</p>
+<h4 id="algorithm">algorithm</h4>
+<p>HER：在经历一些episode之后，我们储存这些转换，其中不仅有这个episode的目标，也包含其他目标的子集。追逐目标会影响agent的动作，但是不会影响环境的动态信息。所以我们可以使用一些任意目标。</p>
+<p>算法的一种简单角度就是将轨迹的最终状态设为目标来对轨迹进行replay。HER可以看作是一种隐式的课程，因为用于replay的目标会自然地从简单到困难。HER使用稀疏的奖励表现得更好。</p>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1594046765250.png" alt="" loading="lazy"></figure>
+<h4 id="experiment">experiment</h4>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1594046774554.png" alt="" loading="lazy"></figure>
+<p>考虑三种不同的任务：pushing，sliding和pick-and-place。</p>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1594046782915.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1594046790800.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1594046861721.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1594046870241.png" alt="" loading="lazy"></figure>
+<p>利用最终状态设立目标的方法叫做final，replay k个随机且与正在重播的转换同一episode中并且在其之后被观测到的状态 --叫future，episode方法是replay k个与正在重播的转换同意episode的状态，random是随机replay k个状态。</p>
+<figure data-type="image" tabindex="8"><img src="https://Hotwaterman.github.io/post-images/1594046835604.png" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#a-motivating-example">A motivating example</a></li>
+<li><a href="#multi-goal-rl">multi-goal RL</a></li>
+<li><a href="#algorithm">algorithm</a></li>
+<li><a href="#experiment">experiment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/duo-zhi-neng-ti-multi-agent/">
+              <h3 class="post-title">
+                多智能体 Multi-agent
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '9999894a50dca27154cd',
+    clientSecret: '0aa89a33b3905b5073ee1541e0fc8cc54fbb84bb',
+    repo: 'Hotwaterman.github.io',
+    owner: 'Hotwaterman',
+    admin: ['Hotwaterman'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
