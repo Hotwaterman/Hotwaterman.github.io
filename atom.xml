@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Hotwaterman.github.io</id>
     <title>Jiao&apos;s blog</title>
-    <updated>2020-07-30T05:48:52.237Z</updated>
+    <updated>2020-07-30T06:03:54.881Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Hotwaterman.github.io"/>
     <link rel="self" href="https://Hotwaterman.github.io/atom.xml"/>
@@ -14,7 +14,7 @@
         <id>https://Hotwaterman.github.io/post/ghostnet-more-features-from-cheap-operations/</id>
         <link href="https://Hotwaterman.github.io/post/ghostnet-more-features-from-cheap-operations/">
         </link>
-        <updated>2020-07-30T06:44:46.000Z</updated>
+        <updated>2020-07-30T07:44:46.000Z</updated>
         <content type="html"><![CDATA[<p>CNNs are very powerful, especially the emergence of resnet, which makes it possible for network performance to become better and better as the depth of the network becomes deeper, but this leads to a large and slow model. Recently, various researches have appeared in the design of lightweight networks, such as model pruning, quantification, knowledge distillation, or some simplified network structure design. Today I am going to introduce a paper on CVPR2020 from Huawei Noah Lab (I think this is designed for Huawei mobile phones). Ghostnet can achieve the same accuracy as SOTA algorithm with less computational complexity .</p>
 <p>The paper provides a new Ghost module, which aims to generate more feature maps through cheap operations. Based on a set of original feature maps, the author applies a series of linear transformations to generate many &quot;Ghost feature maps&quot; that can extract the required information from the original features at a small cost. The Ghost module is plug-and-play, and Ghost bottleneck is obtained by stacking Ghost modules, and then a lightweight neural network-GhostNet is built.</p>
 <figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1596087935622.png" alt="" loading="lazy"></figure>
@@ -76,6 +76,7 @@
 </tbody>
 </table>
 <p>It is a pity that the accuracy in the paper is not reached, which may be the reason for some parameter selection.</p>
+<p>You can check my code on <a href="https://github.com/Hotwaterman/CV_ghsotnet">https://github.com/Hotwaterman/CV_ghsotnet</a></p>
 ]]></content>
     </entry>
     <entry>
