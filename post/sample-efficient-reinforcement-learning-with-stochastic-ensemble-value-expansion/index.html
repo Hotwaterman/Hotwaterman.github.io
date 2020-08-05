@@ -1,0 +1,243 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sample-Efficient Reinforcement Learning with Stochastic Ensemble Value Expansion  | Jiao&#39;s blog</title>
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1596639539096">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Sample-Efficient Reinforcement Learning with Stochastic Ensemble Value Expansion  | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="将model-free和model-based方法结合在一起是很有潜力的。model-based方法是建立一个环境的动态模型，利用动态模型训练一个策略on rollouts, 利用rollouts去提升TD learning，用从rollo..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1596639539096" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Sample-Efficient Reinforcement Learning with Stochastic Ensemble Value Expansion 
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-08-06
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>将model-free和model-based方法结合在一起是很有潜力的。model-based方法是建立一个环境的动态模型，利用动态模型训练一个策略on rollouts, 利用rollouts去提升TD learning，用从rollout中得到的信息作为策略的输入。但是这种方式在复杂的动态环境中很难学习到准确的模型，累计误差的产生会让策略错误。</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1596639427936.png" alt="" loading="lazy"></figure>
+<p>这篇论文提出一种stochastic ensemble value expansion （STEVE）方法，对model-based value expansion（MVE）方法的变体。MVE推理未来的定长步数，但是这会积累模型误差。STEVE对不同长度进行插值，偏爱具有低不确定度的水平长度。为了计算插值目标，用ensemble替代模型和Q函数，计算采样的方差来表征ensemble的不确定度。</p>
+<h3 id="background">background</h3>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1596639436350.png" alt="" loading="lazy"></figure>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo>(</mo><msup><mi>s</mi><mo mathvariant="normal">′</mo></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">d(s&#x27;)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 如果 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>s</mi><mo mathvariant="normal">′</mo></msup></mrow><annotation encoding="application/x-tex">s&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span> 是终态则为1，其余为0。 我们从replay buffer中均匀采样估计Q函数。</p>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1596639443596.png" alt="" loading="lazy"></figure>
+<p>在计算TD target的时候使用的是旧的参数 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>θ</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">\theta^-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.771331em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span></span></span></span></span></span></span></span> 。</p>
+<p>因为我们计算的是连续动作空间，所以不能简单的计算 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>a</mi><msub><mi>x</mi><mi>a</mi></msub><msubsup><mover accent="true"><mi>Q</mi><mo>^</mo></mover><mi>θ</mi><mi>π</mi></msubsup><mo>(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">max_a\hat{Q}_{\theta}^{\pi}(s,a)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2298779999999998em;vertical-align:-0.2831079999999999em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9467699999999999em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">Q</span></span></span><span style="top:-3.25233em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.16666em;">^</span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.4168920000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2831079999999999em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mclose">)</span></span></span></span>，利用一个神经网络去近似最大函数。</p>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1596639451823.png" alt="" loading="lazy"></figure>
+<p>这篇论文将DDPG作为基础的学习算法。</p>
+<h4 id="mve">MVE</h4>
+<p>动态模型有三个学习函数：转换函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>T</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{T}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9467699999999999em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9467699999999999em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-3.25233em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.16666em;">^</span></span></span></span></span></span></span></span></span>，终止函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>d</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9578799999999998em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9578799999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">d</span></span></span><span style="top:-3.26344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.08332999999999999em;">^</span></span></span></span></span></span></span></span></span>，返回是否是终态的可能性，和奖励函数。模型意图最小化：</p>
+<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1596639459907.png" alt="" loading="lazy"></figure>
+<p>若是离散环境中，第一项可以替换成cross entropy loss。</p>
+<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1596639466899.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1596639473562.png" alt="" loading="lazy"></figure>
+<p>MVE发现从replay buffer中采样得到的Q函数误差比模型推理中得到的误差要低，他们将这个叫做分布偏差问题，并采用TD-k 作为解决方案。</p>
+<h3 id="stochastic-ensemble-value-expansion">Stochastic ensemble value expansion</h3>
+<p>H 的时间步长推理，我们可以计算出H+1个不同的目标，标准的TD learning是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi mathvariant="normal">T</mi><mn>0</mn><mrow><mi>M</mi><mi>V</mi><mi>E</mi></mrow></msubsup></mrow><annotation encoding="application/x-tex">\Tau_0^{MVE}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0894389999999998em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">T</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mord mathdefault mtight" style="margin-right:0.22222em;">V</span><span class="mord mathdefault mtight" style="margin-right:0.05764em;">E</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>，MVE是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi mathvariant="normal">T</mi><mi>H</mi><mrow><mi>M</mi><mi>V</mi><mi>E</mi></mrow></msubsup></mrow><annotation encoding="application/x-tex">\Tau_H^{MVE}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1166619999999998em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">T</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.424669em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.08125em;">H</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mord mathdefault mtight" style="margin-right:0.22222em;">V</span><span class="mord mathdefault mtight" style="margin-right:0.05764em;">E</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>。对所有的目标都进行插值，然后利用不同的权重来平衡误差。</p>
+<h4 id="algorithm">algorithm</h4>
+<figure data-type="image" tabindex="8"><img src="https://Hotwaterman.github.io/post-images/1596639481084.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://Hotwaterman.github.io/post-images/1596639499889.png" alt="" loading="lazy"></figure>
+<h4 id="derivation">derivation</h4>
+<figure data-type="image" tabindex="10"><img src="https://Hotwaterman.github.io/post-images/1596639507199.png" alt="" loading="lazy"></figure>
+<p>通过权重w来最小化mean-squared误差，可以通过ensemble的经验方差来估计方差项，但是对于偏差项并没有一个合适的estimator。所以这篇论文中，忽略了偏差，来最小化方差项：</p>
+<figure data-type="image" tabindex="11"><img src="https://Hotwaterman.github.io/post-images/1596639514637.png" alt="" loading="lazy"></figure>
+<h3 id="experiments">experiments</h3>
+<figure data-type="image" tabindex="12"><img src="https://Hotwaterman.github.io/post-images/1596639522373.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://Hotwaterman.github.io/post-images/1596639528480.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://Hotwaterman.github.io/post-images/1596639534702.png" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#background">background</a>
+<ul>
+<li><a href="#mve">MVE</a></li>
+</ul>
+</li>
+<li><a href="#stochastic-ensemble-value-expansion">Stochastic ensemble value expansion</a>
+<ul>
+<li><a href="#algorithm">algorithm</a></li>
+<li><a href="#derivation">derivation</a></li>
+</ul>
+</li>
+<li><a href="#experiments">experiments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/ghostnet-more-features-from-cheap-operations/">
+              <h3 class="post-title">
+                GhostNet: More Features from Cheap Operations
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '9999894a50dca27154cd',
+    clientSecret: '0aa89a33b3905b5073ee1541e0fc8cc54fbb84bb',
+    repo: 'Hotwaterman.github.io',
+    owner: 'Hotwaterman',
+    admin: ['Hotwaterman'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
