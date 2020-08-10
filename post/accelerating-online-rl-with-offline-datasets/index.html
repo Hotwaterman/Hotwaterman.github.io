@@ -1,0 +1,251 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>accelerating online RL with offline datasets | Jiao&#39;s blog</title>
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1597054230617">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="accelerating online RL with offline datasets | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="对于数据驱动的强化学习，offline datasets 包括状态，动作和奖励的轨迹。这些数据可以是来自于所需任务的demonstrations，次级优化策略，相关任务的demonstrations，或者只是环境中的随机探索。取决于数据质量..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1597054230617" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              accelerating online RL with offline datasets
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-08-10
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>对于数据驱动的强化学习，offline datasets 包括状态，动作和奖励的轨迹。这些数据可以是来自于所需任务的demonstrations，次级优化策略，相关任务的demonstrations，或者只是环境中的随机探索。取决于数据质量，关于动态模型的有用的先验知识可以从中提取出来。一种有效的数据驱动方式应该是可以利用这些数据去pre-train 离线，fine-tuning 在线。</p>
+<p>这篇论文的方法是使用dynamic programming 训练一个critic，有监督的更新去训练一个actor。动态规划可以利用off-policy 数据和样本高效学习。监督actor更新隐式地向偏离分布的动作施加了限制。</p>
+<h3 id="preliminary">preliminary</h3>
+<p>RL agent的目标就是最大化回报期望，可以利用策略梯度方法学习到最优策略，但是因为estimator 的高方差导致这种方法的低效。很多算法试图通过引入价值函数，Q函数，优势A函数来降低方差。</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1597054087505.png" alt="" loading="lazy"></figure>
+<p>actor-critic算法通过两部分来最大化return：策略估计和策略提升。策略估计阶段，通过当前策略评估critic Q函数：</p>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1597054096166.png" alt="" loading="lazy"></figure>
+<p>通过迭代<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>Q</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>B</mi><mi>π</mi></msup><msup><mi>Q</mi><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">Q^{k+1}=B^{\pi}Q^k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.043548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.043548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span></span></span> 使 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>Q</mi><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">Q^k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.043548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span></span></span> 收敛至 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>Q</mi><mi>π</mi></msup></mrow><annotation encoding="application/x-tex">Q^{\pi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span></span></span></span></span></span></span></span>。通过函数近似我们很难准确的估计bellman operator，所以来最小化bellman error：</p>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1597054106820.png" alt="" loading="lazy"></figure>
+<p>在策略提升阶段，actor的策略基于当前Q值进行更新：</p>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1597054120693.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1597054128579.png" alt="" loading="lazy"></figure>
+<h3 id="challenges-in-offline-rl-with-online-fine-tuning">challenges in offline RL with Online Fine-tuning</h3>
+<h4 id="problem-definition">problem definition</h4>
+<p>假设在训练之前提供一个关于转换信息的静态数据集，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><mo>{</mo><mo>(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo separator="true">,</mo><msup><mi>s</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><mi>r</mi><msub><mo>)</mo><mi>j</mi></msub><mo>}</mo></mrow><annotation encoding="application/x-tex">D=\{(s,a,s&#x27;,r)_j\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.038em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>。数据集可以是一个随机策略的采样，也可以是一个专家行为。目标是利用D来进行pre-training，并且进行一些在线的交互来优化策略。</p>
+<h4 id="data-efficiency">data efficiency</h4>
+<p>一种利用先验数据的方式是模仿学习pre-train一个policy然后对on-policy RL进行fine-tuning。但是这种方法有两个缺点：1. 先验数据可能不是最优 2. on-policy fine-tuning是低效的，其在RL阶段是不重用过往经验的。考虑到sample efficiency，使用off-policy的actor-critic算法。</p>
+<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1597054141305.png" alt="" loading="lazy"></figure>
+<h4 id="bootstrap-error-in-offline-learning-with-actor-critic-method">bootstrap error in offline learning with actor-critic method</h4>
+<p>一个标准的off-policy actor-critic 算法应用在这个问题上时，表现并不理想，尽管有先验数据的存在，但算法并没有从离线的pre-train中得到明显的改善。这里尝试了SAC，可以看出前后并没有太大区别（figure 2）。论文提出这种问题可能是因为off-policy bootstrapping 的误差累积。一旦动作偏离分布，那么Q值也将不准确。为了解决这一问题，引入了限制：</p>
+<p><img src="https://Hotwaterman.github.io/post-images/1597054149069.png" alt="" loading="lazy"><br>
+这里的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\theta}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是需要更新的actor，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi>β</mi></msub><mo>(</mo><mi>a</mi><mi mathvariant="normal">∣</mi><mi>s</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">\pi_{\beta}(a|s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mord">∣</span><span class="mord mathdefault">s</span><span class="mclose">)</span></span></span></span>是过去所有收集数据所表示的分布。很多离线RL算法都是通过最大似然估计来fit 一个分布<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi>β</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\beta}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 样本的参数模型：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>π</mi><mo>^</mo></mover><mi>β</mi></msub><mo>=</mo><mi>m</mi><mi>a</mi><msub><mi>x</mi><msub><mover accent="true"><mi>π</mi><mo>^</mo></mover><mi>β</mi></msub></msub><msub><mi>E</mi><mrow><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mtext> </mtext><msub><mi>π</mi><mi>β</mi></msub></mrow></msub><mo>[</mo><mi>l</mi><mi>o</mi><mi>g</mi><msub><mover accent="true"><mi>π</mi><mo>^</mo></mover><mi>β</mi></msub><mo>(</mo><mi>a</mi><mi mathvariant="normal">∣</mi><mi>s</mi><mo>)</mo><mo>]</mo></mrow><annotation encoding="application/x-tex">\hat{\pi}_{\beta}=max_{\hat{\pi}_{\beta}}E_{s,a~\pi_{\beta}}[log\hat{\pi}_{\beta}(a|s)]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">^</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1030799999999998em;vertical-align:-0.35307999999999995em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord accent mtight"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mtight">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29011428571428566em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35307999999999995em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">a</span><span class="mspace nobreak mtight"><span class="mtight"> </span></span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29011428571428566em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35307999999999995em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">^</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mord">∣</span><span class="mord mathdefault">s</span><span class="mclose">)</span><span class="mclose">]</span></span></span></span>。估计完<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>π</mi><mo>^</mo></mover><mi>β</mi></msub></mrow><annotation encoding="application/x-tex">\hat{\pi}_{\beta}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">^</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，就能像公式5一样对其施加限制，方式很多，如在策略更新中加入惩罚项，或者一些动作采样的结构选择。但是这种准确估计使其很难和在线fine-tuning一起使用。</p>
+<h4 id="excessively-conservative-online-learning">excessively conservative online learning</h4>
+<p>从图2我们不难看出，在在线阶段，性能很难得到明显的提升。主要的挑战是在线学习阶段收集的数据如何去fit 一个准确的行为模型，offline可以通过最大似然训练一个模型，但是在online阶段，行为模型必须实时跟进不断得到的数据。可见，这种限制优化过于保守，在新数据来临时并不能很好的fit，所以导致了这种limited improvement。所以这要求我们的算法既能限制策略来使其稳定避免累计误差，并且不能过于保守。</p>
+<h3 id="advantage-weighted-actor-critic">advantage weighted actor critic</h3>
+<p>提出了一种名叫advantage weighted actor critic （AWAC）算法，其中的actor引入了一种隐式地限制。AWAC学一个可以使在策略评估阶段学习到的critic价值最大化的策略，同时使策略分布与数据分布保持一致。在第k轮，优化策略使每个状态的Q值最大，并且限制数据分布与离线训练时相似。</p>
+<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1597054160282.png" alt="" loading="lazy"></figure>
+<p>之前已经提到了，用参数模型去限制这种明显的约束效果并不好，所以引入非参数的隐式地约束：</p>
+<figure data-type="image" tabindex="8"><img src="https://Hotwaterman.github.io/post-images/1597054168096.png" alt="" loading="lazy"></figure>
+<p>这个问题的近似形式解为：</p>
+<figure data-type="image" tabindex="9"><img src="https://Hotwaterman.github.io/post-images/1597054174813.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://Hotwaterman.github.io/post-images/1597054183460.png" alt="" loading="lazy"></figure>
+<p>我们需要将非参数解投影到策略空间中：</p>
+<figure data-type="image" tabindex="11"><img src="https://Hotwaterman.github.io/post-images/1597054191699.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://Hotwaterman.github.io/post-images/1597054198315.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://Hotwaterman.github.io/post-images/1597054205578.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://Hotwaterman.github.io/post-images/1597054213002.png" alt="" loading="lazy"></figure>
+<h3 id="experiment">experiment</h3>
+<figure data-type="image" tabindex="15"><img src="https://Hotwaterman.github.io/post-images/1597054219064.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://Hotwaterman.github.io/post-images/1597054225594.png" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#preliminary">preliminary</a></li>
+<li><a href="#challenges-in-offline-rl-with-online-fine-tuning">challenges in offline RL with Online Fine-tuning</a>
+<ul>
+<li><a href="#problem-definition">problem definition</a></li>
+<li><a href="#data-efficiency">data efficiency</a></li>
+<li><a href="#bootstrap-error-in-offline-learning-with-actor-critic-method">bootstrap error in offline learning with actor-critic method</a></li>
+<li><a href="#excessively-conservative-online-learning">excessively conservative online learning</a></li>
+</ul>
+</li>
+<li><a href="#advantage-weighted-actor-critic">advantage weighted actor critic</a></li>
+<li><a href="#experiment">experiment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/sample-efficient-reinforcement-learning-with-stochastic-ensemble-value-expansion/">
+              <h3 class="post-title">
+                Sample-Efficient Reinforcement Learning with Stochastic Ensemble Value Expansion 
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '9999894a50dca27154cd',
+    clientSecret: '0aa89a33b3905b5073ee1541e0fc8cc54fbb84bb',
+    repo: 'Hotwaterman.github.io',
+    owner: 'Hotwaterman',
+    admin: ['Hotwaterman'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
