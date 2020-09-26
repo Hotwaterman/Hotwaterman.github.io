@@ -2,13 +2,40 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Hotwaterman.github.io</id>
     <title>Jiao&apos;s blog</title>
-    <updated>2020-08-12T07:48:46.103Z</updated>
+    <updated>2020-09-26T10:59:15.665Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Hotwaterman.github.io"/>
     <link rel="self" href="https://Hotwaterman.github.io/atom.xml"/>
     <logo>https://Hotwaterman.github.io/images/avatar.png</logo>
     <icon>https://Hotwaterman.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Jiao&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[表示学习]]></title>
+        <id>https://Hotwaterman.github.io/post/biao-shi-xue-xi/</id>
+        <link href="https://Hotwaterman.github.io/post/biao-shi-xue-xi/">
+        </link>
+        <updated>2020-09-26T11:58:38.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>为了提高机器学习系统的准确率，我们就需要将输入信息转换为有效的特征，或者更一般性称为表示（Representation）。如果有一种算法可以自动地学习出有效的特征，并提高最终机器学习模型的性能，那么这种学习就是可以叫做表示学习（Representation Learning）</strong>。</p>
+<p>表示学习的关键是解决<strong>语义鸿沟（Semantic Gap）问题</strong>。语义鸿沟问题是指<strong>输入数据的底层特征和高层语义信息之间的不一致性和差异性</strong>。比如给定一些关于“车”的图片，由于图片中每辆车的颜色和形状等属性都不尽相同，不同图片在像素级别上的表示（即底层特征）差异性也会非常大。但是我们人理解这些图片是建立在比较抽象的高层语义概念上的。<strong>如果一个预测模型直接建立在底层特征之上，会导致对预测模型的能力要求过高。如果可以有一个好的表示在某种程度上可以反映出数据的高层语义特征，那么我们就可以相对容易地构建后续的机器学习模型。</strong></p>
+<p>在表示学习中，有两个核心问题：一是“什么是一个好的表示？”；二是“如何学习到好的表示？”</p>
+<p>好的表示没有明确的标准，但通常具有以下几个优点：</p>
+<ul>
+<li>一个好的表示应该具有<strong>很强的表示能力</strong>，即同样大小的向量可以表示更多信息。</li>
+<li>一个好的表示应该<strong>使后续的学习任务变得简单</strong>，即需要包含更高层的语义信息。</li>
+<li>一个好的表示应该<strong>具有一般性，是任务或领域独立的</strong>。虽然目前的大部分表示学习方法还基于某个任务来学习，但我们期望学到的表示可以比较容易迁移到其它任务上。</li>
+</ul>
+<p>在传统机器学习中，我们经常使用两种方式来表示特征：<strong>局部表示（Local Representation）<strong>和</strong>分布式表示（Distributed Representation）</strong>。</p>
+<p>以颜色表示为例，一种表示颜色的方法是以不同名字来命名不同的颜色，这种表示方式叫做one-hot局部表示，也称为离散表示或符号表示。局部表示通常可以表示为向量的形式。</p>
+<p>局部表示有两个不足之处：（1）one-hot 向量的<strong>维数很高，且不能扩展</strong>。如果有一种新的颜色，我们就需要增加一维来表示；（2）不同颜色之间的<strong>相似度</strong>都为0，即我们无法知道“红色”和“中国红”的相似度要比“红色”和“黑色”的相似度要高。</p>
+<p>另一种表示颜色的方法是用RGB值来表示颜色，不同颜色对应R、G、B三维空间中一个点，这种表示方式叫做分布式表示。分布式表示通常可以表示为低维的稠密向量。</p>
+<p>和局部表示相比，分布式表示的表示能力要比局部表示强很多，分布式表示的向量维度一般都比较低。我们只需要用一个三维的稠密向量就可以表示所有颜色。并且分布式表示也很容易表示新的颜色名。此外，不同颜色之间的相似度也很容易计算。</p>
+<p><strong>我们可以使用神经网络来将高维的局部表示空间映射到一个非常低维的分布式表示空间</strong>。在这个低维空间中，每个特征不再是坐标轴上的点，而是分散在整个低维空间中。</p>
+<p>在机器学习中，这个过程也称为<strong>嵌入（Embedding）</strong>。<strong>嵌入通常指将一个度量空间中的一些对象映射到另一个低维的度量空间中，并尽可能保持不同对象之间的拓扑关系</strong>。比如自然语言中词的分布式表示，也经常叫做词嵌入。</p>
+<p>要学习到一种好的高层语义表示（一般为分布式表示），通常需要从底层特征开始，经过多步非线性转换才能得到。<strong>一个深层结构的优点是可以增加特征的连续多次的线性转换等价于重用性，从而指数级地增加表示能力。因此，表示学习的关键是构建具有一定深度的多层次特征表示。</strong></p>
+<p>传统的特征学习一般是通过人为地设计一些准则，然后根据这些准则来选取有效的特征。<strong>特征的学习是和最终预测模型的学习分开进行的，因此学习到的特征不一定可以提升最终模型的性能。</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1601117946102.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[dynamic-aware unsupervised discovery of skills]]></title>
         <id>https://Hotwaterman.github.io/post/dynamic-aware-unsupervised-discovery-of-skills/</id>
@@ -488,33 +515,6 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 <p>[5] Bowen Weng, Huaqing Xiong . <em>Analysis of Q-learning with Adaptation and Momentum Restartfor Gradient Descent</em>.</p>
 <p>[6] Zaiwei  Chen,  Sheng  Zhang,  Thinh  T.Doan, Siva Theja Maguluri, and John-Paul Clarke. <em>Finite-time analysis of Q-learning with linear function approximation</em>. arXiv preprint arXiv:1905.11425, 2019</p>
 <p>[7] Sashank J. Reddi, Satyen Kale, and San-jiv Kumar. <em>On the convergence of Adam and beyond</em>. International Conference on Learning Representations, 2018</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hindsight Experience Replay]]></title>
-        <id>https://Hotwaterman.github.io/post/hindsight-experience-replay/</id>
-        <link href="https://Hotwaterman.github.io/post/hindsight-experience-replay/">
-        </link>
-        <updated>2020-07-06T15:45:23.000Z</updated>
-        <content type="html"><![CDATA[<p>hindsight experience replay 主要解决的是稀疏且是二元的奖励问题。</p>
-<h4 id="a-motivating-example">A motivating example</h4>
-<p>考虑一个bit-flipping的环境，即状态空间为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo>=</mo><mo>{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><msup><mo>}</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">S=\{0,1\}^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span> ，动作空间为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo><mo>{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>}</mo></mrow><annotation encoding="application/x-tex">A=\{0,1,...,n-1\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">}</span></span></span></span> ，每个episode均匀采样一个初始状态和目标状态，除目标外其余奖励为-1。观察到当n&gt;40时，一般的RL很容易失败，因为不曾经历除-1之外的奖励。但一些提高探索的方法并不能有效改善这个问题，因为在巨大的状态空间中进行探索是不现实的。一个标准解法是使用其他的奖励函数，但是在更复杂的环境中也十分困难。</p>
-<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1594046755493.png" alt="" loading="lazy"></figure>
-<h4 id="multi-goal-rl">multi-goal RL</h4>
-<p>假定一个映射，一个s到g的映射，其中某些s可以得到为1的奖励。从分布中采样目标和初始目标，并在一定数量的时间布上运行agent，非g的状态奖励为1，但是这种方法在实践中表现的并不好，因为奖励稀疏且信息较少。</p>
-<h4 id="algorithm">algorithm</h4>
-<p>HER：在经历一些episode之后，我们储存这些转换，其中不仅有这个episode的目标，也包含其他目标的子集。追逐目标会影响agent的动作，但是不会影响环境的动态信息。所以我们可以使用一些任意目标。</p>
-<p>算法的一种简单角度就是将轨迹的最终状态设为目标来对轨迹进行replay。HER可以看作是一种隐式的课程，因为用于replay的目标会自然地从简单到困难。HER使用稀疏的奖励表现得更好。</p>
-<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1594046765250.png" alt="" loading="lazy"></figure>
-<h4 id="experiment">experiment</h4>
-<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1594046774554.png" alt="" loading="lazy"></figure>
-<p>考虑三种不同的任务：pushing，sliding和pick-and-place。</p>
-<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1594046782915.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1594046790800.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1594046861721.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1594046870241.png" alt="" loading="lazy"></figure>
-<p>利用最终状态设立目标的方法叫做final，replay k个随机且与正在重播的转换同一episode中并且在其之后被观测到的状态 --叫future，episode方法是replay k个与正在重播的转换同意episode的状态，random是随机replay k个状态。</p>
-<figure data-type="image" tabindex="8"><img src="https://Hotwaterman.github.io/post-images/1594046835604.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
