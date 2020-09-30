@@ -2,13 +2,25 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Hotwaterman.github.io</id>
     <title>Jiao&apos;s blog</title>
-    <updated>2020-09-30T11:52:12.794Z</updated>
+    <updated>2020-09-30T14:27:49.881Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Hotwaterman.github.io"/>
     <link rel="self" href="https://Hotwaterman.github.io/atom.xml"/>
     <logo>https://Hotwaterman.github.io/images/avatar.png</logo>
     <icon>https://Hotwaterman.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Jiao&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Learning to Predict Without Looking Ahead: World Models Without Forward Prediction]]></title>
+        <id>https://Hotwaterman.github.io/post/learning-to-predict-without-looking-ahead-world-models-without-forward-prediction/</id>
+        <link href="https://Hotwaterman.github.io/post/learning-to-predict-without-looking-ahead-world-models-without-forward-prediction/">
+        </link>
+        <updated>2020-09-30T15:26:58.000Z</updated>
+        <content type="html"><![CDATA[<p>作者认为对未来环境变化的预估是提升人类生存可能性的重要能力，而这些能力不是通过传统的world model学习机制就能够学习出来的。一般的学习机制是让policy与环境进行交互，得到真实的环境数据，然后把真实的环境数据与world model预估出来的数据组合成监督数据进行学习。作者为了让提高policy的“<strong>生存能力</strong>“，在每一时间步给policy输入的环境状态并不一定是真实的，有可能是world model产生的（在预估的环境状态下做决策），作者称之为“observation dropout&quot;。这是一个model-based RL的工作，和以往强调sample efficiency的工作不同，它的主要贡献是提出了新的应用world model到RL中的方式。</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1601476041517.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1601476054356.png" alt="" loading="lazy"></figure>
+<p>仅使用世界模型去训练的策略在直接运用在真实环境的时候也取得了不错的效果，不需要很准确的进行预测，模型虽然存在偏差，但是agent依然能够学到处理任务的能力，这种特征是隐式地，但很好理解。比如世界模型是有倾斜的，或者一些动力学并不准确，但agent依然能学到如何在这种情况下立杆的能力，这种能力本身可以在环境之中进行迁移，agent只需要在遇到真实环境的时候稍加修正即可。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[episodic RL]]></title>
         <id>https://Hotwaterman.github.io/post/episodic-rl/</id>
@@ -318,47 +330,6 @@
 <p>强化学习可以分为两个基本问题：学习和计划。简而言之，学习就是agent在与环境的交互中改善其策略，计划是不与环境交互来改进。在学习阶段，agent从真实环境中得到experience，计划阶段agent在环境模型中采样experience。在这篇文章中，提出了dyna2的结构，和Dyna一样，agent从真实经验和仿真经验中更新价值函数，不一样的是dyna2有两个独立的memory：一个从真实经验中更新的永久学习记忆和一个从仿真经验中更新的短暂计划记忆。两个memory都使用线性函数近似，利用TD进行更新。</p>
 <p>基于采样的planning的有效性主要依赖于模型的准确性。蒙特卡洛模拟是一种基于采样的搜索方法，从一个真实状态开始随机搜索，模拟多个episodes，得到Q值。结束模拟后，agent贪婪选择argmax Q，然后进入下一个真实的状态s。<br>
 <img src="https://Hotwaterman.github.io/post-images/1595681982562.png" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Dyna]]></title>
-        <id>https://Hotwaterman.github.io/post/dyna/</id>
-        <link href="https://Hotwaterman.github.io/post/dyna/">
-        </link>
-        <updated>2020-07-23T09:29:01.000Z</updated>
-        <content type="html"><![CDATA[<p>Dyna架构尝试整合：</p>
-<ol>
-<li>试错学习一个优化的策略</li>
-<li>以行为模型的方式学习domain知识，一个将状态和动作作为输入，输出为下一状态的预测的黑盒。</li>
-<li>planning：通过给定的domain knowledge（动作模型）来寻找优化策略</li>
-<li>reactive execution： 状态和反应行为之间没有planning 作用。</li>
-</ol>
-<p>Dyna 结构实际上是为了agent不能建立准确的world model的情况而设计的。Dyna 假设agent的任务实际上了可以视为奖励最大化问题，通过与环境交互得到奖励，采取使奖励最大化的动作。</p>
-<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1595493007894.png" alt="" loading="lazy"></figure>
-<p>Dyna的主要思想是planning ‘trying things in your head' 利用一个world的内部模型。这表明有一种更为primitive的方法是直接和环境进行交互，dyna就像是强化学习和一个世界模型的结合体。</p>
-<p>上图给出了dyna的算法。前面几步都是一个标准的强化学习agent，第四步agent通过经验去学习一个model，model用来预测动作结果，第五步是planning过程，从假设的模型中进行强化学习。</p>
-<h3 id="components-of-dyna">components of Dyna</h3>
-<p>三个重要成分：</p>
-<ol>
-<li>action model 及其学习算法</li>
-<li>步骤五中的选择假设状态和动作的算法</li>
-<li>强化学习模型</li>
-</ol>
-<p>这篇文章中提出action model的建立是不在dyna的考虑范围内，类似监督学习的方式，可以选择任何合适的算法来构建action model。一些监督学习并不能增量式的处理这些经历，只能将其储存起来之后进行处理。</p>
-<p>关于如何选择虚拟状态和动作有很多方法，像随机选择之前的观测（均匀选取或者按照出现频率来选取），这些都是搜索控制问题。</p>
-<h3 id="planning-and-reacting-in-dyna">planning and reacting in Dyna</h3>
-<p>在虚拟经历中进行强化学习实际上是一种planning的增量形式，类似于动态规划，这里我们将其称为incremental dynamic programming。如果IDP planning的step可以比真实的step更快更cheaply，那IDP可以更快的找到优化的策略。</p>
-<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1595492996896.png" alt="" loading="lazy"></figure>
-<p>在dyna中，IDP planning是在选择完动作之后进行的，实际上这些处理都是可以并行进行，planning和reacting之间并不是强耦合。IDP planning的有点在于它完全是增量式的，每次planning都能带来性能的增长，并且因为它只对世界进行部分预测而不对其进行假设，所以可以处理复杂不确定的任务。而IDP的缺点是它可能需要大量的memory，因为其是对存储的大量经历进行学习，即使是用监督学习他也是内存密集型。</p>
-<h3 id="dyna的潜在问题">dyna的潜在问题</h3>
-<ol>
-<li>对监督学习的依赖</li>
-<li>分层planning</li>
-<li>Ambiguous and Hidden State</li>
-<li>确保行为的多样性</li>
-<li>任务，目标</li>
-<li>对先验知识的利用</li>
-</ol>
 ]]></content>
     </entry>
 </feed>
