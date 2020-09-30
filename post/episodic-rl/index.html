@@ -1,0 +1,229 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>episodic RL | Jiao&#39;s blog</title>
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1601466726313">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="episodic RL | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="episodic RL主要针对的是强化学习中：SGD学习率小，更新缓慢；奖励sparse，和延时奖励，奖励信号传递缓慢这些原因，从而导致强化学习缓慢的问题。引入了非参数的储存memory，从而直接进行学习，加快速度和sample effic..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://Hotwaterman.github.io">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1601466726313" alt="">
+  </a>
+  <h1 class="site-title">
+    Jiao&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              episodic RL
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-09-30
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>episodic RL主要针对的是强化学习中：SGD学习率小，更新缓慢；奖励sparse，和延时奖励，奖励信号传递缓慢这些原因，从而导致强化学习缓慢的问题。引入了非参数的储存memory，从而直接进行学习，加快速度和sample efficiency。</p>
+<h3 id="1-model-free-episodic-control">1. model-free episodic control</h3>
+<p>主要思想是记录state-action pair （s,a）出发的最高累计奖励。</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1601466665344.png" alt="" loading="lazy"></figure>
+<p><strong>不过这种方式其实存在问题，对于(s,a)的奖励</strong> <strong>服从方差较大的分布的情况，储存最大值用于指导动作选择并非最优，但是文中也指出该算法是面向near-deterministic，希望环境的动态几乎确定，也就是(s,a)的奖励</strong>)<strong>几乎确定，这样的环境中exploitation比exploration更重要，这时该算法才比较有效。</strong></p>
+<p>针对内存有限和相似状态的泛化，采用淘汰访问频率最低的记忆，如果输入的状态对存在于memory中，就直接调用，不存在就取k近邻的均值。</p>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1601466675930.png" alt="" loading="lazy"></figure>
+<p>同时这篇论文的实验也比较了不同的表示学习方法对结果影响也较大，这里不重点讨论，之后再研究。</p>
+<h3 id="2-neural-episodic-control">2. neural episodic control</h3>
+<ul>
+<li>提出一个可学习的端到端episodic control网络架构（Neural Episodic Control），使用了可差分的字典结构<em>differentiable neural dictionary</em>（DND）和可学习的卷积神经网络，储存使用的数据结构是td-tree；</li>
+<li>使用新状态的k近邻的值函数按照与新状态的距离成反比的权重求和估计新状态值函数。</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1601466686256.png" alt="" loading="lazy"></figure>
+<p>这里的Q估计变为了N-step的形式，其余便是对于状态的表示行为进一步利用，针对h之间的距离，来表示不同状态之间的距离，从而对相似状态的估计进行权重均值计算。</p>
+<h3 id="3-episodic-memory-dqn">3. episodic memory DQN</h3>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1601466697878.png" alt="" loading="lazy"></figure>
+<p>这里使用的random project 做的representation，这里利用情节记忆奖励对Q学习进行regularization：</p>
+<figure data-type="image" tabindex="5"><img src="https://Hotwaterman.github.io/post-images/1601466705123.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://Hotwaterman.github.io/post-images/1601466710624.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://Hotwaterman.github.io/post-images/1601466717206.png" alt="" loading="lazy"></figure>
+<ul>
+<li>本算法为了快速获取key对应的值，没有采取k近邻取均值，而是<strong>直接取相等的k</strong>，这样的问题是一方面没有利用到状态之间的联系，另一方面对很多状态动作对直接使用历史数据的累积折扣奖励进行更新（无重要性采样），会由于策略之间的偏差造成最后结果有偏，不过使用一个较小的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>能够缓解；</li>
+<li><strong>本算法没有与neural episodic control等算法比较</strong>，实际上我认为只引入较小权重的H的表现应该不如neural episodic control；</li>
+<li>本文在两方面给了我们启发，一是non-parametric和parametric强化学习算法的结合，二是提供了一种新的使用与策略无关的累积折扣奖励（相当于MC的估计）结合TD的估计来提高off-policy的算法的样本利用效率的思路（因为off-policy中使用累积折扣奖励一般需要使用重要性采样）。</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-model-free-episodic-control">1. model-free episodic control</a></li>
+<li><a href="#2-neural-episodic-control">2. neural episodic control</a></li>
+<li><a href="#3-episodic-memory-dqn">3. episodic memory DQN</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://Hotwaterman.github.io/post/biao-shi-xue-xi/">
+              <h3 class="post-title">
+                表示学习
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '9999894a50dca27154cd',
+    clientSecret: '0aa89a33b3905b5073ee1541e0fc8cc54fbb84bb',
+    repo: 'Hotwaterman.github.io',
+    owner: 'Hotwaterman',
+    admin: ['Hotwaterman'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://Hotwaterman.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
