@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>non stationary in RL | Jiao&#39;s blog</title>
-<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1610088186596">
+<link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1610088361696">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="non stationary in RL | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
@@ -21,7 +21,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://Hotwaterman.github.io">
-  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1610088186596" alt="">
+  <img class="avatar" src="https://Hotwaterman.github.io/images/avatar.png?v=1610088361696" alt="">
   </a>
   <h1 class="site-title">
     Jiao&#39;s blog
@@ -88,13 +88,13 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>最近看了一些关于RL中所面临的不稳定问题（non-stationary）的文章，所谓的non-stationary就是MDP中的transition和reward都会随着时间或缓慢或突然发生变化，这样agent学习的策略将不再适用于新的环境模型，同时对于一些off policy或者offline的方法，增加了更多的困难。</p>
+                <p>最近看了一些关于RL中所面临的不稳定问题（non-stationary）的文章，所谓的non-stationary就是MDP中的transition和reward都会随着时间或缓慢或突然发生变化，这样agent学习的策略将不再适用于新的环境模型，对于一些off policy或者offline的方法，增加了更多的困难。</p>
 <p>发现大多数的方法采用的都是：</p>
 <ol>
 <li>检测环境变化点，即由一个环境模型变化为另一个环境模型的转换点，检测方式往往采用的是利用数据分布的比较。</li>
 <li>采用forget或者restart的方式，重新学习策略，以应对新的环境模型。这点虽然看起来十分低效，但我觉得为了防止过往数据经验对新策略学习的影响，restart够简单粗暴，而且有效。就像我们训练一个网络，我们肯定不希望数据中的random label的fake data对模型的训练带来不好的影响，所以对这些数据的剔除，不失为一个好办法。</li>
 </ol>
-<p>同时也有人结合最近的lifelong 和 meta-learning来学习策略，这样的模型利用过往的经验加速了对新环境的适应过程，但同时也增加了模型的计算和存储要求。</p>
+<p>也有人结合最近的lifelong 和 meta-learning来学习策略，这样的模型利用过往的经验加速了对新环境的适应过程，但同时也增加了模型的计算和存储要求。</p>
 <p>在众多方法中，我觉得窗口滑动和RUQ方法结合或许可以有不错的效果（虽然两个方法都很早了。。）：</p>
 <p>窗口滑动类似于forget，这使agent摆脱了过往错误数据对其策略学习的影响，但是本身重新开始的学习又显得不是很efficiency。RUQ的思想很简单，就是对于概率很低的动作，更新多次。有些状态动作因为其概率较低，所以我们很可能无法reach，所以就很难更新其value。RUQ就是当reach到这个状态动作时，一次性进行多次的更新，来防止一种explore和exploit之间的不平衡。</p>
 
