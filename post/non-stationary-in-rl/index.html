@@ -2,16 +2,16 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Learning to Predict Without Looking Ahead: World Models Without Forward Prediction | Jiao&#39;s blog</title>
+<title>non stationary in RL | Jiao&#39;s blog</title>
 <link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1610088186596">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Learning to Predict Without Looking Ahead: World Models Without Forward Prediction | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="non stationary in RL | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="作者认为对未来环境变化的预估是提升人类生存可能性的重要能力，而这些能力不是通过传统的world model学习机制就能够学习出来的。一般的学习机制是让policy与环境进行交互，得到真实的环境数据，然后把真实的环境数据与world mode..." />
+    <meta name="description" content="最近看了一些关于RL中所面临的不稳定问题（non-stationary）的文章，所谓的non-stationary就是MDP中的transition和reward都会随着时间或缓慢或突然发生变化，这样agent学习的策略将不再适用于新的环境..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -74,11 +74,11 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Learning to Predict Without Looking Ahead: World Models Without Forward Prediction
+              non stationary in RL
             </h2>
             <div class="post-info">
               <span>
-                2020-10-01
+                2021-01-08
               </span>
               <span>
                 2 min read
@@ -88,10 +88,15 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>作者认为对未来环境变化的预估是提升人类生存可能性的重要能力，而这些能力不是通过传统的world model学习机制就能够学习出来的。一般的学习机制是让policy与环境进行交互，得到真实的环境数据，然后把真实的环境数据与world model预估出来的数据组合成监督数据进行学习。作者为了让提高policy的“<strong>生存能力</strong>“，在每一时间步给policy输入的环境状态并不一定是真实的，有可能是world model产生的（在预估的环境状态下做决策），作者称之为“observation dropout&quot;。这是一个model-based RL的工作，和以往强调sample efficiency的工作不同，它的主要贡献是提出了新的应用world model到RL中的方式。</p>
-<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1601476041517.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1601476054356.png" alt="" loading="lazy"></figure>
-<p>仅使用世界模型去训练的策略在直接运用在真实环境的时候也取得了不错的效果，不需要很准确的进行预测，模型虽然存在偏差，但是agent依然能够学到处理任务的能力，这种特征是隐式地，但很好理解。比如世界模型是有倾斜的，或者一些动力学并不准确，但agent依然能学到如何在这种情况下立杆的能力，这种能力本身可以在环境之中进行迁移，agent只需要在遇到真实环境的时候稍加修正即可。</p>
+                <p>最近看了一些关于RL中所面临的不稳定问题（non-stationary）的文章，所谓的non-stationary就是MDP中的transition和reward都会随着时间或缓慢或突然发生变化，这样agent学习的策略将不再适用于新的环境模型，同时对于一些off policy或者offline的方法，增加了更多的困难。</p>
+<p>发现大多数的方法采用的都是：</p>
+<ol>
+<li>检测环境变化点，即由一个环境模型变化为另一个环境模型的转换点，检测方式往往采用的是利用数据分布的比较。</li>
+<li>采用forget或者restart的方式，重新学习策略，以应对新的环境模型。这点虽然看起来十分低效，但我觉得为了防止过往数据经验对新策略学习的影响，restart够简单粗暴，而且有效。就像我们训练一个网络，我们肯定不希望数据中的random label的fake data对模型的训练带来不好的影响，所以对这些数据的剔除，不失为一个好办法。</li>
+</ol>
+<p>同时也有人结合最近的lifelong 和 meta-learning来学习策略，这样的模型利用过往的经验加速了对新环境的适应过程，但同时也增加了模型的计算和存储要求。</p>
+<p>在众多方法中，我觉得窗口滑动和RUQ方法结合或许可以有不错的效果（虽然两个方法都很早了。。）：</p>
+<p>窗口滑动类似于forget，这使agent摆脱了过往错误数据对其策略学习的影响，但是本身重新开始的学习又显得不是很efficiency。RUQ的思想很简单，就是对于概率很低的动作，更新多次。有些状态动作因为其概率较低，所以我们很可能无法reach，所以就很难更新其value。RUQ就是当reach到这个状态动作时，一次性进行多次的更新，来防止一种explore和exploit之间的不平衡。</p>
 
               </div>
               <div class="toc-container">
@@ -104,9 +109,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://Hotwaterman.github.io/post/episodic-rl/">
+            <a href="https://Hotwaterman.github.io/post/fen-ceng-qiang-hua-xue-xi/">
               <h3 class="post-title">
-                episodic RL
+                分层强化学习
               </h3>
             </a>
           </div>
