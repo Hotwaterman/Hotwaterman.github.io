@@ -2,16 +2,16 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Learning to Predict Without Looking Ahead: World Models Without Forward Prediction | Jiao&#39;s blog</title>
+<title>Inter-Level Cooperation in Hierarchical Reinforcement Learning | Jiao&#39;s blog</title>
 <link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1610166202901">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Learning to Predict Without Looking Ahead: World Models Without Forward Prediction | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Inter-Level Cooperation in Hierarchical Reinforcement Learning | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="作者认为对未来环境变化的预估是提升人类生存可能性的重要能力，而这些能力不是通过传统的world model学习机制就能够学习出来的。一般的学习机制是让policy与环境进行交互，得到真实的环境数据，然后把真实的环境数据与world mode..." />
+    <meta name="description" content="这篇文章的思想是将multi-agent和HRL相结合来解决high-level的non-stationary的问题，旨在通过high-level和low-level之间的交流，使high-level在学习策略的时候将low-level的表..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -74,24 +74,28 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Learning to Predict Without Looking Ahead: World Models Without Forward Prediction
+              Inter-Level Cooperation in Hierarchical Reinforcement Learning
             </h2>
             <div class="post-info">
               <span>
-                2020-10-01
+                2021-01-09
               </span>
               <span>
-                2 min read
+                1 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>作者认为对未来环境变化的预估是提升人类生存可能性的重要能力，而这些能力不是通过传统的world model学习机制就能够学习出来的。一般的学习机制是让policy与环境进行交互，得到真实的环境数据，然后把真实的环境数据与world model预估出来的数据组合成监督数据进行学习。作者为了让提高policy的“<strong>生存能力</strong>“，在每一时间步给policy输入的环境状态并不一定是真实的，有可能是world model产生的（在预估的环境状态下做决策），作者称之为“observation dropout&quot;。这是一个model-based RL的工作，和以往强调sample efficiency的工作不同，它的主要贡献是提出了新的应用world model到RL中的方式。</p>
-<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1601476041517.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1601476054356.png" alt="" loading="lazy"></figure>
-<p>仅使用世界模型去训练的策略在直接运用在真实环境的时候也取得了不错的效果，不需要很准确的进行预测，模型虽然存在偏差，但是agent依然能够学到处理任务的能力，这种特征是隐式地，但很好理解。比如世界模型是有倾斜的，或者一些动力学并不准确，但agent依然能学到如何在这种情况下立杆的能力，这种能力本身可以在环境之中进行迁移，agent只需要在遇到真实环境的时候稍加修正即可。</p>
+                <p>这篇文章的思想是将multi-agent和HRL相结合来解决high-level的non-stationary的问题，旨在通过high-level和low-level之间的交流，使high-level在学习策略的时候将low-level的表现考虑进去。</p>
+<p>而这篇论文的实现手法也很简单粗暴，将low-level k steps的cumulative reward加入high-level的objective中：</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1610166176305.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1610166182160.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1610166187196.png" alt="" loading="lazy"></figure>
+<p>实验：</p>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1610166194161.png" alt="" loading="lazy"></figure>
+<p>能看出来比HIRO的效果要好，但是没有和HAC相比较，所以也不知道这种解决non-stationary的方式和hindsight这种relabel的方式相比，哪种效果更好。</p>
 
               </div>
               <div class="toc-container">
@@ -104,9 +108,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://Hotwaterman.github.io/post/episodic-rl/">
+            <a href="https://Hotwaterman.github.io/post/non-stationary-in-rl/">
               <h3 class="post-title">
-                episodic RL
+                non stationary in RL
               </h3>
             </a>
           </div>

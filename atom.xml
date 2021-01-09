@@ -2,13 +2,29 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Hotwaterman.github.io</id>
     <title>Jiao&apos;s blog</title>
-    <updated>2021-01-08T06:46:13.029Z</updated>
+    <updated>2021-01-09T04:23:31.155Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Hotwaterman.github.io"/>
     <link rel="self" href="https://Hotwaterman.github.io/atom.xml"/>
     <logo>https://Hotwaterman.github.io/images/avatar.png</logo>
     <icon>https://Hotwaterman.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Jiao&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Inter-Level Cooperation in Hierarchical Reinforcement Learning]]></title>
+        <id>https://Hotwaterman.github.io/post/inter-level-cooperation-in-hierarchical-reinforcement-learning/</id>
+        <link href="https://Hotwaterman.github.io/post/inter-level-cooperation-in-hierarchical-reinforcement-learning/">
+        </link>
+        <updated>2021-01-09T05:22:20.000Z</updated>
+        <content type="html"><![CDATA[<p>这篇文章的思想是将multi-agent和HRL相结合来解决high-level的non-stationary的问题，旨在通过high-level和low-level之间的交流，使high-level在学习策略的时候将low-level的表现考虑进去。</p>
+<p>而这篇论文的实现手法也很简单粗暴，将low-level k steps的cumulative reward加入high-level的objective中：</p>
+<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1610166176305.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1610166182160.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://Hotwaterman.github.io/post-images/1610166187196.png" alt="" loading="lazy"></figure>
+<p>实验：</p>
+<figure data-type="image" tabindex="4"><img src="https://Hotwaterman.github.io/post-images/1610166194161.png" alt="" loading="lazy"></figure>
+<p>能看出来比HIRO的效果要好，但是没有和HAC相比较，所以也不知道这种解决non-stationary的方式和hindsight这种relabel的方式相比，哪种效果更好。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[non stationary in RL]]></title>
         <id>https://Hotwaterman.github.io/post/non-stationary-in-rl/</id>
@@ -589,40 +605,6 @@ I(s&#039;;z\mid s)&amp;=H(s&#039;\mid s)-H(s&#039;\mid s,z) \\
 </table>
 <p>It is a pity that the accuracy in the paper is not reached, which may be the reason for some parameter selection.</p>
 <p>You can check my code on <a href="https://github.com/Hotwaterman/CV_ghsotnet">https://github.com/Hotwaterman/CV_ghsotnet</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Towards sample efficient RL]]></title>
-        <id>https://Hotwaterman.github.io/post/towards-sample-efficient-rl/</id>
-        <link href="https://Hotwaterman.github.io/post/towards-sample-efficient-rl/">
-        </link>
-        <updated>2020-07-26T15:22:21.000Z</updated>
-        <content type="html"><![CDATA[<p>强化学习中agent与环境交互，通过探索数据来学习策略。阻碍强化学习落地现实的一个主要问题就是sample efficiency。</p>
-<h3 id="exploration">exploration</h3>
-<p>agent需要在不停探索新的状态以获得更好的轨迹数据，常常在动作空间增加噪声以达到是每个状态都能被探索到的效果。但是动作空间噪声的局限性在于导致的策略可能远离目前参数空间的策略，甚至远离参数空间，这让策略更新变得困难。</p>
-<h4 id="parameter-space-noise">parameter space noise</h4>
-<p>在参数空间中引入随机噪声对策略的更新更为合适，更效率。Fortunato提出了一个折中的方法，noisynet 向策略网络的靠近输出层处添加一个随机网络，来达到随机化动作的目的。</p>
-<h4 id="curiosity-driven-exploration">curiosity-driven exploration</h4>
-<p>agent可能多次尝试一条失败的路径，这也造成了采样效率低。好奇心驱动的探索比随机探索更有效率，内在动机促使agent探索之前less visited的状态。对于高维状态空间，对于好奇心实现的一个障碍是很难确定一个状态之前是否被探索过。ICM模块克服了这一缺陷，他利用状态预测误差来衡量一个状态是否被探索过，同时利用自监督方法学习一个低维状态表示。内在动机是一个延时的反馈，或许我们更需要一个直接的激励。</p>
-<h3 id="optimization">optimization</h3>
-<p>在进行探索收集数据之后，我们需要更新策略或者价值函数的模型。现在，一般利用神经网络去表示这些模型，但是找到一个恰当的神经网络去拟合是不容易的。不像监督学习那样样本都是固定的，一旦策略发生变化，状态轨迹的分布就会发生变化，就会产生新的样本分布。因此我们不是在当前样本上实现最优，而是更希望能探索到更好的样本。</p>
-<h4 id="optimization-from-samples">optimization from samples</h4>
-<p>一般网络的优化往往是利用目标的梯度，但是这些方法只是从样本中优化策略，没有考虑到探索问题。同时也有一种黑盒优化，derivative-free方法。我们把策略参数视为探索空间，长期奖励期望作为优化目标。黑盒优化采样不同的策略参数可以视为是一种探索过程，但是黑盒优化尤其本身的收敛速度慢，难以scale up和对噪声敏感，没有理论上的收敛性证明的缺点。</p>
-<h4 id="hybrid-optimization">hybrid optimization</h4>
-<p>另一种改善方法是混合优化，结合梯度和无梯度优化。一种思想是对一堆模型进行采样，但每个模型的优化还是梯度优化。stochastic gradient langevin dynamics 也可以看作是一种混合优化。但是混合优化的研究并不多。</p>
-<h3 id="environment-modeling">environment modeling</h3>
-<p>model-based 方法给环境进行建模，给出了状态转换函数，那么就可以用监督学习的方式来进行优化。但是这种方法在高维连续中表现并不好。</p>
-<h4 id="combining-model-based-and-model-free">combining model-based and model-free</h4>
-<p>价值迭代网络使用一个计划结构网络来实现价值迭代，价值迭代和环境转换同时被学习，然后将价值迭代的计划结果作为策略输入的增强特征，而不是直接从价值中学习一个策略。Weber提出了一个想象力增强agent，想象力模块学习环境模型，将推理路径作为策略输入的一个增强特征。pong学习一个Q函数来预测与目标之间的距离。这个可以作为一个即时奖励来引导学习。</p>
-<h4 id="manually-constructed-environment">manually constructed environment</h4>
-<p>利用对抗学习来重构一个环境。</p>
-<h3 id="experience-transfer">experience transfer</h3>
-<p>通过一些旧任务来学习新任务。transformer或者meta。</p>
-<h3 id="abstraction">abstraction</h3>
-<h4 id="hierarchical-rl">hierarchical RL</h4>
-<p>层次强化学习方法可以从层次结构中受益，因为高级策略的培训时间较短，因此效率更高。但是，如何缩短培训范围还不清楚。 大多数方法迫使高级决策仅在每个固定步骤中进行。 这样，高级策略可能无法按时更改子策略。 此外，分级强化学习可能不适合仅解决一项任务。 在多任务和转移学习场景中，子策略可能被更定义为可以跨任务重用的策略段，如[Sahni等人，2017]的一部分。 还值得注意的是，很少有关于多级层次结构的研究。</p>
-<h4 id="nn-with-symbols">nn with symbols</h4>
-<p>在策略模型内部，需要注意的是，尽管常用的神经网络能够从原始输入抽象到某些概念级别，例如识别图片中的对象，但它们却不能在抽象级别进行操作。 但是一旦能够，策略模型可能会强大到内部学习状态/动作的抽象。 值得注意的是，最近的一组研究正在努力扩展这种神经网络的能力。  Graves等。  [2016]通过模拟记忆细胞，使神经网络具有记忆能力。  Hu等。  [2016]和Evans和Grefenstette [2018]将逻辑组件作为神经网络中的可区分部分。 不幸的是，由于当前神经网络模型中无法进行递归，推理路径必须提前扩展，这使得模型太大而无法存储。 戴等。  [2018]在神经网络中集成了完整的Prolog系统，以便网络可以使用高效的离散搜索树执行一阶逻辑推论。 他们证明，从代数方程图片学习的新模型可以正确理解代数规则，因此在较长的方程上具有很强的泛化性能。 我们可以想象，当神经网络模型可以用一阶逻辑推理能力进行通用抽象时，就可以有效地对环境建模，并可以跨任务传递其高级推理。</p>
 ]]></content>
     </entry>
 </feed>
