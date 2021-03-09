@@ -2,21 +2,16 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dyna | Jiao&#39;s blog</title>
+<title>Towards High-Level Intrinsic Exploration in Reinforcement Learning | Jiao&#39;s blog</title>
 <link rel="shortcut icon" href="https://Hotwaterman.github.io/favicon.ico?v=1615274262136">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Hotwaterman.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Dyna | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Towards High-Level Intrinsic Exploration in Reinforcement Learning | Jiao&#39;s blog - Atom Feed" href="https://Hotwaterman.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="Dyna架构尝试整合：
-
-试错学习一个优化的策略
-以行为模型的方式学习domain知识，一个将状态和动作作为输入，输出为下一状态的预测的黑盒。
-planning：通过给定的domain knowledge（动作模型）来寻找优化策略
-reac..." />
+    <meta name="description" content="一种探索的的方法，思想很简单，和RND一样基于图像重建来构造intrinsic reward。先将image转换为低维的context，然后利用熟悉的state经过predict应该很容易得到一个和truth接近的context，而陌生的新..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -79,70 +74,27 @@ reac..." />
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Dyna
+              Towards High-Level Intrinsic Exploration in Reinforcement Learning
             </h2>
             <div class="post-info">
               <span>
-                2020-07-23
+                2021-03-09
               </span>
               <span>
-                3 min read
+                1 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>Dyna架构尝试整合：</p>
-<ol>
-<li>试错学习一个优化的策略</li>
-<li>以行为模型的方式学习domain知识，一个将状态和动作作为输入，输出为下一状态的预测的黑盒。</li>
-<li>planning：通过给定的domain knowledge（动作模型）来寻找优化策略</li>
-<li>reactive execution： 状态和反应行为之间没有planning 作用。</li>
-</ol>
-<p>Dyna 结构实际上是为了agent不能建立准确的world model的情况而设计的。Dyna 假设agent的任务实际上了可以视为奖励最大化问题，通过与环境交互得到奖励，采取使奖励最大化的动作。</p>
-<figure data-type="image" tabindex="1"><img src="https://Hotwaterman.github.io/post-images/1595493007894.png" alt="" loading="lazy"></figure>
-<p>Dyna的主要思想是planning ‘trying things in your head' 利用一个world的内部模型。这表明有一种更为primitive的方法是直接和环境进行交互，dyna就像是强化学习和一个世界模型的结合体。</p>
-<p>上图给出了dyna的算法。前面几步都是一个标准的强化学习agent，第四步agent通过经验去学习一个model，model用来预测动作结果，第五步是planning过程，从假设的模型中进行强化学习。</p>
-<h3 id="components-of-dyna">components of Dyna</h3>
-<p>三个重要成分：</p>
-<ol>
-<li>action model 及其学习算法</li>
-<li>步骤五中的选择假设状态和动作的算法</li>
-<li>强化学习模型</li>
-</ol>
-<p>这篇文章中提出action model的建立是不在dyna的考虑范围内，类似监督学习的方式，可以选择任何合适的算法来构建action model。一些监督学习并不能增量式的处理这些经历，只能将其储存起来之后进行处理。</p>
-<p>关于如何选择虚拟状态和动作有很多方法，像随机选择之前的观测（均匀选取或者按照出现频率来选取），这些都是搜索控制问题。</p>
-<h3 id="planning-and-reacting-in-dyna">planning and reacting in Dyna</h3>
-<p>在虚拟经历中进行强化学习实际上是一种planning的增量形式，类似于动态规划，这里我们将其称为incremental dynamic programming。如果IDP planning的step可以比真实的step更快更cheaply，那IDP可以更快的找到优化的策略。</p>
-<figure data-type="image" tabindex="2"><img src="https://Hotwaterman.github.io/post-images/1595492996896.png" alt="" loading="lazy"></figure>
-<p>在dyna中，IDP planning是在选择完动作之后进行的，实际上这些处理都是可以并行进行，planning和reacting之间并不是强耦合。IDP planning的有点在于它完全是增量式的，每次planning都能带来性能的增长，并且因为它只对世界进行部分预测而不对其进行假设，所以可以处理复杂不确定的任务。而IDP的缺点是它可能需要大量的memory，因为其是对存储的大量经历进行学习，即使是用监督学习他也是内存密集型。</p>
-<h3 id="dyna的潜在问题">dyna的潜在问题</h3>
-<ol>
-<li>对监督学习的依赖</li>
-<li>分层planning</li>
-<li>Ambiguous and Hidden State</li>
-<li>确保行为的多样性</li>
-<li>任务，目标</li>
-<li>对先验知识的利用</li>
-</ol>
+                <p>一种探索的的方法，思想很简单，和RND一样基于图像重建来构造intrinsic reward。先将image转换为低维的context，然后利用熟悉的state经过predict应该很容易得到一个和truth接近的context，而陌生的新状态则很难预测准确。至于为什么利用context来进行构造，则是因为：<br>
+高维图像导致predict网络的输出很难拟合，同时差距可能体现在一些无关紧要的细节从而使agent难以探索到真正有用的state。<br>
+本文的创新点很简单，就是对原始图像进行不同尺度的下采样，从而构造出不同尺度上的intrinsic reward（slow/fast），不难理解，一个从局部上，一个从全局上考虑，从而使agent的探索范围更广。</p>
 
               </div>
               <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#components-of-dyna">components of Dyna</a></li>
-<li><a href="#planning-and-reacting-in-dyna">planning and reacting in Dyna</a></li>
-<li><a href="#dyna%E7%9A%84%E6%BD%9C%E5%9C%A8%E9%97%AE%E9%A2%98">dyna的潜在问题</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
+                
               </div>
             </div>
           </article>
@@ -151,9 +103,9 @@ reac..." />
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://Hotwaterman.github.io/post/optimization-problems-in-reinforcement-learningq-learning/">
+            <a href="https://Hotwaterman.github.io/post/i2hrl-interactive-influence-based-hierarchical-reinforcement-learning/">
               <h3 class="post-title">
-                Optimization problems in reinforcement learning（Q-learning）
+                I2HRL: Interactive Influence-based Hierarchical Reinforcement Learning
               </h3>
             </a>
           </div>
