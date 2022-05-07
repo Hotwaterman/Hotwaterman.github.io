@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hotwaterman.github.io</id>
     <title>Gridea</title>
-    <updated>2022-05-07T09:53:56.301Z</updated>
+    <updated>2022-05-07T09:58:17.171Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hotwaterman.github.io"/>
     <link rel="self" href="https://hotwaterman.github.io/atom.xml"/>
@@ -10,4 +10,27 @@
     <logo>https://hotwaterman.github.io/images/avatar.png</logo>
     <icon>https://hotwaterman.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[Multi-task reinforcement learning with soft modularization]]></title>
+        <id>https://hotwaterman.github.io/post/multi-task-reinforcement-learning-with-soft-modularization/</id>
+        <link href="https://hotwaterman.github.io/post/multi-task-reinforcement-learning-with-soft-modularization/">
+        </link>
+        <updated>2022-05-07T09:54:55.000Z</updated>
+        <content type="html"><![CDATA[<p><img src="https://hotwaterman.github.io/post-images/1651917339812.png" alt="" loading="lazy"><br>
+在多任务强化学习中，因为任务的性质和难易不同，在利用一个模型同时训练多个任务时，往往会出现相差较大的任务梯度冲突，容易的任务先达到收敛等问题。目前解决这些问题的方法有知识蒸馏（即学多个任务policy之后蒸馏给一个policy），梯度修剪（即在计算不同任务梯度时按照投影方向更新等），progress网络（好像是增量式的学任务，增量式的加网络），还有pathway类（即本文这种，通过激活不同的模块来增加网络的容量）。<br>
+<img src="https://hotwaterman.github.io/post-images/1651917368862.png" alt="" loading="lazy"><br>
+<img src="https://hotwaterman.github.io/post-images/1651917374824.png" alt="" loading="lazy"></p>
+<h3 id="网络结构">网络结构</h3>
+<p>从上面两个图片中的网络结构可以看出，网络方面的主要工作大约有两点：1. 学习一个多层级且每个层级有多个模块的base 网络（这里的一个模块可以是很多层网络，输出也是多维） 2. 学习一个分配不同模块间权重的routing网络 （注意到base网络的输入是通用的环境状态（与任务无关），而routing网络的输入是包含任务特有信息的）。这里也是因为meta world这个任务是在相同环境下相同物理动态信息下的不同任务，所以base网络可以学习基础通用的信息，然后利用routing网络来进行特定task的调整。</p>
+<p>这里我也发现将通用信息和特定信息进行分离貌似是当前RL的一种趋势，我觉得可以学习一个像NLP和CV里面那种容量更大的通用模型（可以进行预训练），和一个特定任务的小网络，两者进行加权来finetune到任何一个任务上，不仅速度更快，而且可以充分发挥当前大网络的优势。<br>
+<img src="https://hotwaterman.github.io/post-images/1651917396375.png" alt="" loading="lazy"><br>
+题目里面的soft是指在routing网络生成的权重分配中是利用softmax进行平滑。</p>
+<h3 id="多任务优化">多任务优化</h3>
+<p><img src="https://hotwaterman.github.io/post-images/1651917461569.png" alt="" loading="lazy"><br>
+这里利用SAC中衡量策略熵的alpha来判断当前任务的难易程度（难得任务更难收敛，所以熵会更大），然后对policy loss里面不同任务进行一个加权处理（类似梯度修剪，VMPO等，就是让简单的任务等等难的）。</p>
+<h3 id="实验结果">实验结果</h3>
+<p>从实验结果上可以看出效果还是很不错的。<br>
+<img src="https://hotwaterman.github.io/post-images/1651917486271.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
 </feed>
